@@ -1,0 +1,12 @@
+version: "2"
+services: 
+  odoo-report-microservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: odoo-report-microservice
+    restart: always
+    ports:
+      - "${PORT}:80"
+    volumes:
+      - .:/app

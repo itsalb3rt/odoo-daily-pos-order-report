@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/flexboxgrid.css" />
+    <link rel="stylesheet" href="./css/pico.css" />
+    <title>Odoo - Report</title>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Reporte de ordenes</h1>
+      <div class="row">
+        <div class="col-xs-12">
+          <button style="width: auto;">⎙ Imprimir</button>
+        </div>
+        <div class="col-xs-12 col-md-4">
+          <input id="start-date" type="date" />
+        </div>
+        <div class="col-xs-12 col-md-4">
+          <input id="end-date" type="date" />
+        </div>
+        <div class="col-xs-12 col-md-4">
+          <button style="width: auto;" id="fetch-data">🔎 Obtener reporte</button>
+        </div>
+      </div>
+
+      <div class="order-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Referencia</th>
+              <th>Fecha</th>
+              <th>Efectivo</th>
+              <th>Credito</th>
+              <th>Nombre Cliente</th>
+              <th>NCF</th>
+            </tr>
+          </thead>
+          <tbody class="order-table-body"></tbody>
+        </table>
+      </div>
+    </main>
+    <script>
+      const token = window.localStorage.getItem('token');
+
+      document.querySelector('#start-date').value = new Date()
+        .toISOString()
+        .split('T')[0];
+      document.querySelector('#end-date').value = new Date()
+        .toISOString()
+        .split('T')[0];
+
+      document.querySelector('#fetch-data').addEventListener('click', () => {
+        const startDate = document.querySelector('#start-date').value;
+        const endDate = document.querySelector('#end-date').value;
+
+        const getReportButton = document.querySelector('#fetch-data');
+        getReportButton.setAttribute('aria-busy', true);
+
+        fetch(`./api/orders?date_order=between:${startDate},${endDate}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const orderTableBody = document.querySelector('.order-table-body');
+            orderTableBody.innerHTML = '';
+
+            data.data.forEach((order) => {
+              const orderRow = document.createElement('tr');
+              orderRow.innerHTML = `
+              <td>${order.name}</td>
+              <td>${order.date_order}</td>
+              <td>${order.amount_total}</td>
+              <td>0</td>
+              <td></td>
+              <td>${order.ncf}</td>
+            `;
+              orderTableBody.appendChild(orderRow);
+            });
+            console.log(data);
+          })
+          .finally(() => {
+            getReportButton.removeAttribute('aria-busy');
+          });
+      });
+    </script>
+  </body>
+</html>

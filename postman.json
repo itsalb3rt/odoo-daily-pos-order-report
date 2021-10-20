@@ -1,0 +1,151 @@
+{
+	"info": {
+		"_postman_id": "0480e4a5-9257-428b-b648-7db8e702db18",
+		"name": "Api Template",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "# Response 2xx\r\n\r\n```json\r\n{\r\n    \"message\": \"User list\",\r\n    \"data\": [],\r\n    \"status\": 200,\r\n    \"pagination\": {\r\n        \"count\": 0,\r\n        \"offset\": 0\r\n    }\r\n}\r\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Users",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Jhon\",\r\n    \"lastName\": \"Doe\",\r\n    \"email\": \"jhon@doe.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "# Response 2xx\r\n\r\n```json\r\n{\r\n    \"message\": \"User created\",\r\n    \"data\": {\r\n        \"id\": 1,\r\n        \"firstName\": \"Jhon\",\r\n        \"lastName\": \"Doe\",\r\n        \"email\": \"jhon@doe.com\",\r\n        \"updatedAt\": \"2021-01-01T22:51:22.181Z\",\r\n        \"createdAt\": \"2021-01-01T22:51:22.181Z\"\r\n    },\r\n    \"status\": 200\r\n}\r\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Users",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Jhon\",\r\n    \"lastName\": \"Doe\",\r\n    \"email\": \"jhon@doe.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/users/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						},
+						"description": "# Response 2xx\r\n\r\n```json\r\n{\r\n    \"message\": \"User created\",\r\n    \"data\": {\r\n        \"id\": 1,\r\n        \"firstName\": \"Jhon\",\r\n        \"lastName\": \"Doe\",\r\n        \"email\": \"jhon@doe.com\",\r\n        \"updatedAt\": \"2021-01-01T22:51:22.181Z\",\r\n        \"createdAt\": \"2021-01-01T22:51:22.181Z\"\r\n    },\r\n    \"status\": 200\r\n}\r\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Users/{userId}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						},
+						"description": "# Response 2xx\r\n\r\n```json\r\n{\r\n    \"message\": \"User found\",\r\n    \"data\": {\r\n        \"id\": 1,\r\n        \"firstName\": \"Jhon\",\r\n        \"lastName\": \"Doe\",\r\n        \"email\": \"jhon@doe.com\",\r\n        \"createdAt\": \"2021-01-01T22:51:22.181Z\",\r\n        \"updatedAt\": \"2021-01-01T22:57:17.047Z\"\r\n    },\r\n    \"status\": 200\r\n}\r\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Users/{userId}",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						},
+						"description": "# Response 2xx\r\n\r\n```json\r\n{\r\n    \"message\": \"User found\",\r\n    \"data\": {\r\n        \"id\": 1,\r\n        \"firstName\": \"Jhon\",\r\n        \"lastName\": \"Doe\",\r\n        \"email\": \"jhon@doe.com\",\r\n        \"createdAt\": \"2021-01-01T22:51:22.181Z\",\r\n        \"updatedAt\": \"2021-01-01T22:57:17.047Z\"\r\n    },\r\n    \"status\": 200\r\n}\r\n```"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost:5000/api"
+		}
+	]
+}
