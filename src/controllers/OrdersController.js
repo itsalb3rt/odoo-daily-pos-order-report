@@ -7,6 +7,14 @@ class OrdersController {
   static async getAll(req, res) {
     const { query } = req;
 
+    const separatorIndex = query.date_order.indexOf(':');
+    const dates = query.date_order.substring(separatorIndex + 1).split(',');
+    const startDate = dates[0];
+    const endDate = dates[1];
+
+    query.date_order = `between:${startDate} 00:00:00,${endDate} 23:59:59`;
+
+
     let { where, limit, offset, order } = querystringConverterHelper.parseQuery(query);
 
     try {
