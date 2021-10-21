@@ -7,12 +7,6 @@ class OrdersController {
   static async getAll(req, res) {
     const { query } = req;
 
-    if (query.date_order) {
-      const date = query.date_order.indexOf(':');
-      console.log('🚀 ~ file: OrdersController.js ~ line 12 ~ OrdersController ~ getAll ~ date', date);
-
-    }
-
     let { where, limit, offset, order } = querystringConverterHelper.parseQuery(query);
 
     try {
