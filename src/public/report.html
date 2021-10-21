@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./css/flexboxgrid.css" />
     <link rel="stylesheet" href="./css/pico.css" />
+    <link rel="stylesheet" href="./css/notyf.css" />
     <title>Odoo - Report</title>
   </head>
   <body>
@@ -30,7 +31,7 @@
         </div>
       </div>
 
-      <div class="order-table-container" style="display: none;">
+      <div class="order-table-container" style="display: none">
         <div id="dates-meta-data" style="display: none">
           <div class="row" style="margin-bottom: 20px">
             <div class="col-xs-6">
@@ -48,6 +49,20 @@
             </div>
           </div>
         </div>
+
+        <div
+          id="no-data"
+          style="
+            display: none;
+            text-align: center;
+            margin: 20px auto;
+            font-weight: bold;
+            font-style: italic;
+          "
+        >
+          No hay datos en este rango de fechas
+        </div>
+
         <table>
           <thead>
             <tr>
@@ -66,6 +81,7 @@
         </div>
       </div>
     </main>
+    <script src="./js/notyf.js"></script>
     <script>
       const token = window.localStorage.getItem('token');
 
@@ -119,7 +135,8 @@
       });
 
       document.querySelector('#fetch-data').addEventListener('click', () => {
-        document.querySelector('.order-table-container').style.display = 'block';
+        document.querySelector('.order-table-container').style.display =
+          'block';
         const startDate = document.querySelector('#start-date').value;
         const endDate = document.querySelector('#end-date').value;
 
@@ -136,11 +153,23 @@
             },
           }
         )
-          .then((response) => response.json())
+          .then(async (response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw await response.json();
+            }
+          })
           .then((data) => {
             const orderTableBody = document.querySelector('.order-table-body');
             orderTableBody.innerHTML = '';
             let total = 0;
+
+            if (data.data.length === 0) {
+              document.querySelector('#no-data').style.display = 'block';
+            } else {
+              document.querySelector('#no-data').style.display = 'none';
+            }
 
             data.data.forEach((order) => {
               const orderRow = document.createElement('tr');
@@ -159,6 +188,10 @@
 
             document.querySelector('#total-amount').textContent =
               formatter.format(total);
+          })
+          .catch((error) => {
+            var notyf = new Notyf();
+            notyf.error(error.error);
           })
           .finally(() => {
             getReportButton.removeAttribute('aria-busy');
