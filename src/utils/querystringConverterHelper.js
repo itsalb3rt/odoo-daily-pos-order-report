@@ -13,7 +13,7 @@ class querystringConverterHelper {
 
     let criterian = querystringConverter.convert({ query });
     criterian.where = this.parseSearch(criterian.where);
-    let { where, order } = criterian;
+    let { where, order, limit } = criterian;
 
     let page = this.getOffset(where);
     if (where){
@@ -22,7 +22,7 @@ class querystringConverterHelper {
 
     order = querystringConverterHelper.getOrder(order);
 
-    return { where, limit: 10, offset: page, order };
+    return { where, limit: limit || 10, offset: page, order };
   }
 
   static getOffset(where) {
