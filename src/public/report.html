@@ -35,7 +35,7 @@
         <div id="dates-meta-data" style="display: none">
           <div class="row" style="margin-bottom: 20px">
             <div class="col-xs-6">
-              <b>CENTRO FERRETERO PAMELA</b>
+              <b id="commerce-name"></b>
               <br />
               FECHA IMPRESION: <span id="print-date"></span>
             </div>
@@ -84,6 +84,29 @@
     <script src="./js/notyf.js"></script>
     <script>
       const token = window.localStorage.getItem('token');
+      const notyf = new Notyf();
+
+      fetch('/api/settings', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token}`,
+        },
+      })
+        .then(async (res) => {
+          if (res.status === 200) {
+            return res.json();
+          } else {
+            throw await res.json();
+          }
+        })
+        .then((settings) => {
+          document.querySelector('#commerce-name').innerText =
+            settings.data.commerce;
+        })
+        .catch((error) => {
+          notyf.error(error.error);
+        });
 
       var formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -190,7 +213,6 @@
               formatter.format(total);
           })
           .catch((error) => {
-            var notyf = new Notyf();
             notyf.error(error.error);
           })
           .finally(() => {
