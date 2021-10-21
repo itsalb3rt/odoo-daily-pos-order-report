@@ -1,5 +1,6 @@
 import { sequelize } from '../database/database';
 import { DataTypes } from 'sequelize';
+import ResPartner from './res_partner';
 
 const posOrder = sequelize.define('pos_order', {
   id: {
@@ -256,6 +257,12 @@ const posOrder = sequelize.define('pos_order', {
       ]
     },
   ]
+});
+
+
+posOrder.hasOne(ResPartner, {
+  sourceKey: 'partner_id',
+  foreignKey: 'id'
 });
 
 export default posOrder;
