@@ -13,7 +13,7 @@
       <h1>Reporte de ordenes</h1>
       <div class="row">
         <div class="col-xs-12">
-          <button style="width: auto;">⎙ Imprimir</button>
+          <button style="width: auto">⎙ Imprimir</button>
         </div>
         <div class="col-xs-12 col-md-4">
           <input id="start-date" type="date" />
@@ -22,7 +22,9 @@
           <input id="end-date" type="date" />
         </div>
         <div class="col-xs-12 col-md-4">
-          <button style="width: auto;" id="fetch-data">🔎 Obtener reporte</button>
+          <button style="width: auto" id="fetch-data">
+            🔎 Obtener reporte
+          </button>
         </div>
       </div>
 
@@ -41,9 +43,25 @@
           <tbody class="order-table-body"></tbody>
         </table>
       </div>
+      <div>
+        <h5>Total: <span id="total-amount"></span></h5>
+      </div>
     </main>
     <script>
       const token = window.localStorage.getItem('token');
+
+      var formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      });
+
+      formatDate = (newDate) => {
+        let d = new Date(newDate);
+        let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+        let mo = new Intl.DateTimeFormat('en', { month: 'numeric' }).format(d);
+        let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+        return `${da}/${mo}/${ye}`
+      };
 
       document.querySelector('#start-date').value = new Date()
         .toISOString()
@@ -59,7 +77,7 @@
         const getReportButton = document.querySelector('#fetch-data');
         getReportButton.setAttribute('aria-busy', true);
 
-        fetch(`./api/orders?date_order=between:${startDate},${endDate}`, {
+        fetch(`./api/orders?date_order=between:${startDate},${endDate}&limit=9999`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -70,20 +88,25 @@
           .then((data) => {
             const orderTableBody = document.querySelector('.order-table-body');
             orderTableBody.innerHTML = '';
+            let total = 0;
 
             data.data.forEach((order) => {
               const orderRow = document.createElement('tr');
               orderRow.innerHTML = `
               <td>${order.name}</td>
-              <td>${order.date_order}</td>
-              <td>${order.amount_total}</td>
+              <td>${formatDate(order.date_order)}</td>
+              <td>${formatter.format(Number(order.amount_total))}</td>
               <td>0</td>
-              <td></td>
-              <td>${order.ncf}</td>
+              <td>${order.res_partner.name}</td>
+              <td>${order.ncf || ''}</td>
             `;
+
+              total += Number(order.amount_total);
               orderTableBody.appendChild(orderRow);
             });
-            console.log(data);
+
+            document.querySelector('#total-amount').textContent =
+              formatter.format(total);
           })
           .finally(() => {
             getReportButton.removeAttribute('aria-busy');
