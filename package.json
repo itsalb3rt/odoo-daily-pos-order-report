@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.js --exec babel-node --legacy-watch",
-    "build": "babel src --out-dir dist",
+    "dev": "nodemon src/index.js --exec babel-node --legacy-watch",
+    "start": "node dist/index.js",
+    "build": "babel src --out-dir dist --copy-files --ignore src/public/js/*.js",
     "production": "node dist/index.js",
     "lint": "eslint ./src/"
   },
