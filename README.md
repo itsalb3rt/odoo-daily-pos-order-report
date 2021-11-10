@@ -10,7 +10,7 @@ Well i have a very special clients... but here a tool for get reports from sales
 Install all dependencies
 
 ```bash
-$ npm install
+$ yarn install
 ```
 
 **ENV file**
@@ -21,20 +21,34 @@ The `env` file contains a series of variables that modify the behavior of the ap
 For development
 
 ```bash
-$ npm run start
+$ yarn dev
 ```
 
 **Build**
 
 For created a production version
 ```bash
-$ npm run build
+$ yarn build
 ```
 
 **Run Production**
 
 ```bash
-$ npm run production
+$ yarn start
+```
+
+# Docker
+
+## Development
+
+```bash
+$ docker-compose -f docker-compose.dev.yml up --build
+```
+
+## Production
+
+```bash
+$ docker-compose up -d
 ```
 
 # Web APP
