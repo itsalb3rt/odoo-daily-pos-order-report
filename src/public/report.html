@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./css/flexboxgrid.css" />
     <link rel="stylesheet" href="./css/pico.css" />
     <link rel="stylesheet" href="./css/notyf.css" />
+    <link rel="stylesheet" href="./css/custom.css" />
     <title>Odoo - Report</title>
   </head>
   <body>
@@ -85,6 +86,7 @@
     <script>
       const token = window.localStorage.getItem('token');
       const notyf = new Notyf();
+      const refreshImg = '<img width="18" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAtUlEQVRIie2UQQrCMBBFH4L1CoInKfQ8XfcW9Qi6E72JC3sRi2dwVTcZTNuJTNKuJA/+IjCZnw+ZgcxCGmAwqgeOQPGrYe3kc40wGYA21LwE3k6lNaJHxTfJjD3w9F7xAg4JJnJ/xBa4M4/aAbs1DM5Kc9FlDYOogliDzYJmJrLBfxj431yQ82lanPJNQ4P6QBnU1Dkwr5reFVQJJqZl2RJeG5puk/vauh9ROBNJYlFjjZhR+QCZD2gGnNm7+AAAAABJRU5ErkJggg=="/>';
 
       fetch('/api/settings', {
         method: 'GET',
@@ -194,10 +196,41 @@
               document.querySelector('#no-data').style.display = 'none';
             }
 
+            // group by pos_reference
+            const groupedData = data.data.reduce((acc, cur) => {
+              if (!acc[cur.pos_reference]) {
+                acc[cur.pos_reference] = [];
+              }
+              acc[cur.pos_reference].push(cur);
+              return acc;
+            }, {});
+
+            const duplicates = Object.values(groupedData).filter(
+              (arr) => arr.length > 1
+            );
+            
+
             data.data.forEach((order) => {
+              // check if order in duplicated by pos_reference
+              let isDuplicate = false;
+              let duplicateIndex = 0;
+              let isRoot = false;
+              duplicates.forEach((duplicate, rootIndex) => {
+                if (duplicate.find((d) => d.id === order.id)) {
+                  isDuplicate = true;
+                  duplicateIndex = rootIndex;
+                }
+              });
+
+              if (isDuplicate){
+                isRoot = duplicates[duplicateIndex][0].id === order.id;
+              }
+
               const orderRow = document.createElement('tr');
               orderRow.innerHTML = `
-              <td>${order.pos_reference.replace('Pedido ', '')}</td>
+              <td class="${
+                isDuplicate && !isRoot ? 'duplicate' : ''
+              }">${order.pos_reference.replace('Pedido ', '')}${isDuplicate && !isRoot ? ' ' + refreshImg : ''}</td>
               <td>${formatDate(order.date_order)}</td>
               <td>${formatter.format(Number(order.amount_total))}</td>
               <td>0</td>
