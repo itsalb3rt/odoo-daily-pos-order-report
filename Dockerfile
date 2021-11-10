@@ -4,7 +4,9 @@ RUN apk update
 
 WORKDIR /app
 
-RUN npm install -g nodemon
+COPY . .
+
+RUN yarn && yarn build
 
 EXPOSE 80
 
