@@ -1,4 +1,4 @@
-# Odoo daily orders report generator
+# Odoo daily POS report generator ✍
 
 
 Well i have a very special clients... but here a tool for get reports from sales.
@@ -6,15 +6,15 @@ Well i have a very special clients... but here a tool for get reports from sales
 ![image](https://user-images.githubusercontent.com/35310226/141217457-1d48060a-a39f-4d4e-abdb-76746c005a33.png)
 
 
-# Features
+# Features 👓
 
-- Easy to use
-- Filter by date (default set the current date)
-- Clean print
+- One click report generator 🔮
+- Filter by date (default set the current date) 📆
+- Clean print 🖨
 
 ---
 
-# Development
+# Development 🧰
 
 Install all dependencies
 
@@ -51,13 +51,13 @@ Remember set the `AUTHORIZATION_KEY` [How to set Token](#how-to-set-token)
 $ yarn start
 ```
 
-### How to set token
+### How to set token 
 
 1. Go to `.env` and generate a random key and set this to `AUTHORIZATION_KEY`
 2. Go to `http://localhost:5000/report`
 3. In the browser open the developer console and go to `application -> Local Storage` and create a key `token` and set as value the `AUTHORIZATION_KEY`
 
-# Docker
+# Docker 🐳
 
 ## Development
 
@@ -71,7 +71,7 @@ $ docker-compose -f docker-compose.dev.yml up --build
 $ docker-compose up -d
 ```
 
-# Web APP
+# Web APP 💻
 
 ```bash
 http://localhost:5000/report
