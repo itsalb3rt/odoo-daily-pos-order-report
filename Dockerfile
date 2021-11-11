@@ -2,7 +2,9 @@ FROM node:12.21.0-alpine3.11
 
 RUN apk update
 
-WORKDIR /app
+RUN mkdir -p /usr/src/app
+
+WORKDIR /usr/src/app
 
 COPY . .
 
