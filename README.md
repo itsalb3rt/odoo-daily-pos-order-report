@@ -28,10 +28,7 @@ The `env` file contains a series of variables that modify the behavior of the ap
 
 :warning: You need to set up the `AUTHORIZATION_KEY` env var, this var is a simple "token" for allowing requests to the API.
 
-1 - Go to `.env` and generate a random key and set this to `AUTHORIZATION_KEY`
-2 - Go to `http://localhost:5000/report`
-3 - In the browser open the developer console and go to `application -> Local Storage` and create a key `token` and set as value the `AUTHORIZATION_KEY`
-
+[How to set Token](#how-to-set-token)
 
 For development
 
@@ -48,9 +45,17 @@ $ yarn build
 
 **Run Production**
 
+Remember set the `AUTHORIZATION_KEY` [How to set Token](#how-to-set-token)
+
 ```bash
 $ yarn start
 ```
+
+### How to set token
+
+1. Go to `.env` and generate a random key and set this to `AUTHORIZATION_KEY`
+2. Go to `http://localhost:5000/report`
+3. In the browser open the developer console and go to `application -> Local Storage` and create a key `token` and set as value the `AUTHORIZATION_KEY`
 
 # Docker
 
