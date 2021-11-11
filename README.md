@@ -6,6 +6,12 @@ Well i have a very special clients... but here a tool for get reports from sales
 ![image](https://user-images.githubusercontent.com/35310226/141217457-1d48060a-a39f-4d4e-abdb-76746c005a33.png)
 
 
+# Features
+
+- Easy to use
+- Filter by date (default set the current date)
+- Clean print
+
 ---
 
 # Development
