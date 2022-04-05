@@ -12,7 +12,33 @@ class OrdersController {
     const startDate = dates[0];
     const endDate = dates[1];
 
-    query.date_order = `between:${startDate} 00:00:00,${endDate} 23:59:59`;
+    let startHour = '';
+    let endHour = '';
+    
+    if (query.interval) {
+      const { interval } = query;
+
+      switch (interval) {
+        case 'complete-day':
+          startHour = '00:00:00';
+          endHour = '23:59:59';
+          break;
+        case 'morning':
+          startHour = '00:00:00';
+          endHour = '12:59:59';
+          break;
+        case 'afternoon':
+          startHour = '13:00:00';
+          endHour = '23:59:59';
+          break;
+        default:
+          break;
+    }
+
+      delete query.interval;
+    }
+
+    query.date_order = `between:${startDate} ${startHour},${endDate} ${endHour}`;
 
 
     let { where, limit, offset, order } = querystringConverterHelper.parseQuery(query);
