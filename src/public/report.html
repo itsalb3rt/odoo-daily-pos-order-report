@@ -24,6 +24,17 @@
           <div class="col-xs-12 col-md-4">
             <input id="end-date" type="date" />
           </div>
+          <div class="col-xs-12" style="margin-bottom: 20px;">
+
+            <input type="radio" name="interval" id="todo-el-dia" value="complete-day" checked>
+            <label for="todo-el-dia">Todo el dia</label>
+
+            <input type="radio" name="interval" id="manana" value="morning">
+            <label for="manana">Mañana</label>
+
+            <input type="radio" name="interval" id="tarde" value="afternoon">
+            <label for="tarde">Tarde</label>
+          </div>
           <div class="col-xs-12 col-md-4">
             <button style="width: auto" id="fetch-data">
               🔎 Obtener reporte
@@ -134,12 +145,30 @@
         document.querySelector('.actions-container').style.display = 'none';
         document.querySelector('#container').classList.remove('container');
         document.querySelector('#dates-meta-data').style.display = 'block';
+
+
+        const interval = document.querySelector('input[name="interval"]:checked')
+          .value;
+        let internalName = '';
+
+        switch (interval) {
+          case 'complete-day':
+            internalName = 'Dia completo';
+            break;
+          case 'morning':
+            internalName = 'Mañana';
+            break;
+          case 'afternoon':
+            internalName = 'Tarde';
+            break;
+      }
+
         document.querySelector('#start-date-range').textContent = formatDate(
           document.querySelector('#start-date').value
         );
         document.querySelector('#end-date-range').textContent = formatDate(
           document.querySelector('#end-date').value
-        );
+        ) + ` (${internalName})`;
 
         options = {
           year: 'numeric',
@@ -168,8 +197,10 @@
         const getReportButton = document.querySelector('#fetch-data');
         getReportButton.setAttribute('aria-busy', true);
 
+        const interval = document.querySelector('input[name=interval]:checked').value;
+
         fetch(
-          `./api/orders?date_order=between:${startDate},${endDate}&limit=9999`,
+          `./api/orders?date_order=between:${startDate},${endDate}&limit=9999&interval=${interval}`,
           {
             method: 'GET',
             headers: {
