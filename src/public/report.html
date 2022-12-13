@@ -299,11 +299,11 @@
               orderRow.innerHTML = `
               <td class="${
                 isDuplicate && !isRoot ? 'duplicate' : ''
-              }">${order.pos_reference.replace('Pedido ', '')}${isDuplicate && !isRoot ? ' ' + refreshImg : ''}</td>
+              }">${order.pos_reference ? order.pos_reference.replace('Pedido ', '') : ''}${isDuplicate && !isRoot ? ' ' + refreshImg : ''}</td>
               <td>${formatDate(order.date_order)}</td>
               <td>${formatter.format(Number(order.amount_total))}</td>
               <td>0</td>
-              <td>${order.res_partner.name}</td>
+              <td>${order.res_partner && order.res_partner.name ? order.res_partner.name : ''}</td>
               <td>${isNCF(order.ncf) ? order.ncf : ''}</td>
             `;
 
