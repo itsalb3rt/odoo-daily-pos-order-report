@@ -35,6 +35,17 @@
             <input type="radio" name="interval" id="tarde" value="afternoon">
             <label for="tarde">Tarde</label>
           </div>
+          <div class="col-xs-12" style="text-align: right;">
+            <!-- Add toggle to show advance options -->
+            <span class="toggle-advance-options">
+              ⚙️ Opciones avanzadas
+            </span>
+            <div class="advance-options-container hide">
+              <!-- Add checkbox to include the invoices -->
+              <input type="checkbox" name="include-invoices" id="include-invoices">
+              <label for="include-invoices">Incluir facturas</label>
+            </div>
+          </div>
           <div class="col-xs-12 col-md-4">
             <button style="width: auto" id="fetch-data">
               🔎 Obtener reporte
@@ -134,6 +145,25 @@
         return `${da}/${mo}/${ye}`;
       };
 
+      document.querySelector('.toggle-advance-options').addEventListener('click', () => {
+        const advanceOptionsContainer = document.querySelector('.advance-options-container');
+        
+        if (advanceOptionsContainer.classList.contains('hide')) {
+          advanceOptionsContainer.classList.remove('hide');
+          // read the value from the local storage
+          const includeInvoices = window.localStorage.getItem('include-invoices');
+          if (includeInvoices === 'true' || includeInvoices === null) {
+            document.querySelector('#include-invoices').checked = true;
+          }        
+        } else {
+          advanceOptionsContainer.classList.add('hide');
+        }
+      });
+
+      document.querySelector('#include-invoices').addEventListener('change', (e) => {
+        window.localStorage.setItem('include-invoices', e.target.checked);
+      });
+
       document.querySelector('#start-date').value = new Date()
         .toISOString()
         .split('T')[0];
@@ -199,8 +229,16 @@
 
         const interval = document.querySelector('input[name=interval]:checked').value;
 
+        const includeInvoices = window.localStorage.getItem('include-invoices') === 'true' || window.localStorage.getItem('include-invoices') === null;
+
+        const isNCF = ncf => {
+          // use regex to check if the ncf is valid like B0200000001
+          const regex = /^[B|E|G|C|F]\d{10}$/;
+          return regex.test(ncf);
+        }
+        
         fetch(
-          `./api/orders?date_order=between:${startDate},${endDate}&limit=9999&interval=${interval}`,
+          `./api/orders?date_order=between:${startDate},${endDate}&limit=9999&interval=${interval}&include_invoices=${includeInvoices}`,
           {
             method: 'GET',
             headers: {
@@ -266,7 +304,7 @@
               <td>${formatter.format(Number(order.amount_total))}</td>
               <td>0</td>
               <td>${order.res_partner.name}</td>
-              <td>${order.ncf || ''}</td>
+              <td>${isNCF(order.ncf) ? order.ncf : ''}</td>
             `;
 
               total += Number(order.amount_total);
@@ -277,6 +315,7 @@
               formatter.format(total);
           })
           .catch((error) => {
+            console.log(error)
             notyf.error(error.error);
           })
           .finally(() => {
