@@ -1,3 +1,11 @@
 .duplicate {
   font-weight: bold;
 }
+
+.toggle-advance-options {
+  cursor: pointer;
+}
+
+.advance-options-container.hide{
+  display: none;
+}
