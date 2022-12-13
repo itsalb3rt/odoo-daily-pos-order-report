@@ -3,7 +3,7 @@
 
 Well i have a very special clients... but here a tool for get reports from sales.
 
-![image](https://user-images.githubusercontent.com/35310226/141217457-1d48060a-a39f-4d4e-abdb-76746c005a33.png)
+![image](https://user-images.githubusercontent.com/35310226/207208178-99de4570-15db-48bb-b8f9-240fcc1bc1d8.png)
 
 
 # Features 👓
