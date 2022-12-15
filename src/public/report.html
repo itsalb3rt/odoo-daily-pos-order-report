@@ -41,9 +41,12 @@
               ⚙️ Opciones avanzadas
             </span>
             <div class="advance-options-container hide">
-              <!-- Add checkbox to include the invoices -->
               <input type="checkbox" name="include-invoices" id="include-invoices">
               <label for="include-invoices">Incluir facturas</label>
+
+              <input type="checkbox" name="include-points-of-sale" id="include-points-of-sale">
+              <label for="include-credit-notes">Incluir Punto de venta</label>
+
             </div>
           </div>
           <div class="col-xs-12 col-md-4">
@@ -152,9 +155,15 @@
           advanceOptionsContainer.classList.remove('hide');
           // read the value from the local storage
           const includeInvoices = window.localStorage.getItem('include-invoices');
+          const includePointsOfSale = window.localStorage.getItem('include-points-of-sale');
+
           if (includeInvoices === 'true' || includeInvoices === null) {
             document.querySelector('#include-invoices').checked = true;
-          }        
+          }  
+
+          if (includePointsOfSale === 'true' || includePointsOfSale === null) {
+            document.querySelector('#include-points-of-sale').checked = true;
+          }
         } else {
           advanceOptionsContainer.classList.add('hide');
         }
@@ -162,6 +171,10 @@
 
       document.querySelector('#include-invoices').addEventListener('change', (e) => {
         window.localStorage.setItem('include-invoices', e.target.checked);
+      });
+
+      document.querySelector('#include-points-of-sale').addEventListener('change', (e) => {
+        window.localStorage.setItem('include-points-of-sale', e.target.checked);
       });
 
       document.querySelector('#start-date').value = new Date()
@@ -230,7 +243,8 @@
         const interval = document.querySelector('input[name=interval]:checked').value;
 
         const includeInvoices = window.localStorage.getItem('include-invoices') === 'true' || window.localStorage.getItem('include-invoices') === null;
-
+        const includePointsOfSale = window.localStorage.getItem('include-points-of-sale') === 'true' || window.localStorage.getItem('include-points-of-sale') === null;
+        
         const isNCF = ncf => {
           // use regex to check if the ncf is valid like B0200000001
           const regex = /^[B|E|G|C|F]\d{10}$/;
@@ -238,7 +252,7 @@
         }
         
         fetch(
-          `./api/orders?date_order=between:${startDate},${endDate}&limit=9999&interval=${interval}&include_invoices=${includeInvoices}`,
+          `./api/orders?date_order=between:${startDate},${endDate}&limit=9999&interval=${interval}&include_invoices=${includeInvoices}&include_points_of_sale=${includePointsOfSale}`,
           {
             method: 'GET',
             headers: {
