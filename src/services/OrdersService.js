@@ -4,16 +4,26 @@ import accountInvoice from '../models/account_invoice';
 class OrdersService {
 
   static async getAll(params) {
-    const { criterions, includeInvoices } = params;
+    const { criterions, includeInvoices, includePosOrders } = params;
 
     try {
-      const includeInvoicesBoolean = includeInvoices === 'true';
+      let results = [];
+      let generalCount = 0;
 
-      let { rows, count } = await POSOrder.findAndCountAll({
-        ...criterions,
-        include: [{ model: ResPartner }]
-      });
-      
+      const includeInvoicesBoolean = includeInvoices === 'true';
+      const includePosOrdersBoolean = includePosOrders === 'true';
+
+      if (includePosOrdersBoolean) {
+        let { rows, count } = await POSOrder.findAndCountAll({
+          ...criterions,
+          include: [{ model: ResPartner }]
+        });
+        results = [...results, ...rows];
+        generalCount += count;
+      }
+
+
+
       if (includeInvoicesBoolean) {
         const invoiceCriterions = {
           ...criterions,
@@ -24,11 +34,11 @@ class OrdersService {
         };
 
         delete invoiceCriterions.where.date_order;
-        const accountInvoiceResults = await accountInvoice.findAndCountAll({
+        const { rows, count } = await accountInvoice.findAndCountAll({
           ...invoiceCriterions,
           include: [{ model: ResPartner }]
         });
-        let accountInvoices = JSON.parse(JSON.stringify(accountInvoiceResults.rows));
+        let accountInvoices = JSON.parse(JSON.stringify(rows));
         accountInvoices = accountInvoices.map(o => ({
           ...o,
           pos_reference: o.reference,
@@ -36,12 +46,12 @@ class OrdersService {
           ncf: o.reference
         }));
 
-        rows = [...rows, ...accountInvoices];
-        count += accountInvoiceResults.count;
+        results = [...results, ...accountInvoices];
+        generalCount += count;
 
       }
       // sort by pos_reference
-      rows.sort((a, b) => {
+      results.sort((a, b) => {
         if (a.pos_reference > b.pos_reference) {
           return 1;
         }
@@ -51,7 +61,7 @@ class OrdersService {
         return 0;
       });
 
-      return { rows: rows, count: count };
+      return { rows: results, count: generalCount };
       // eslint-disable-next-line no-unreachable
     } catch (error) {
       throw error;

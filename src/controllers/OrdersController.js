@@ -12,8 +12,10 @@ class OrdersController {
     const startDate = dates[0];
     const endDate = dates[1];
     const includeInvoices = query.include_invoices;
+    const includePosOrders = query.include_points_of_sale;
 
     delete query.include_invoices;
+    delete query.include_points_of_sale;
 
     let startHour = '';
     let endHour = '';
@@ -49,6 +51,7 @@ class OrdersController {
     try {
       const { rows, count, total } = await OrdersService.getAll({
         includeInvoices,
+        includePosOrders,
         criterions: {
           where,
           limit,
