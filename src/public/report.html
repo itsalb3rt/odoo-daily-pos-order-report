@@ -293,6 +293,7 @@
             
             const getAmountFromPaymentTerm = (order) => {
               let total = 0;
+              if(!order.payments) return total;
               order.payments.forEach((paymentTerm) => {
                 total += parseFloat(paymentTerm.account_payment.amount);
               });
