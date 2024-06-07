@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
@@ -292,6 +291,13 @@
               (arr) => arr.length > 1
             );
             
+            const getAmountFromPaymentTerm = (order) => {
+              let total = 0;
+              order.payments.forEach((paymentTerm) => {
+                total += parseFloat(paymentTerm.account_payment.amount);
+              });
+              return total;
+            };
 
             data.data.forEach((order) => {
               // check if order in duplicated by pos_reference
@@ -315,8 +321,8 @@
                 isDuplicate && !isRoot ? 'duplicate' : ''
               }">${order.pos_reference ? order.pos_reference.replace('Pedido ', '') : ''}${isDuplicate && !isRoot ? ' ' + refreshImg : ''}</td>
               <td>${formatDate(order.date_order)}</td>
-              <td>${formatter.format(Number(order.amount_total))}</td>
-              <td>0</td>
+              <td>${isNaN(order.payment_term_id) ? formatter.format(Number(order.amount_total)) : 0}</td>
+              <td>${!isNaN(order.payment_term_id) ? formatter.format(Number(getAmountFromPaymentTerm(order))) : 0}</td>
               <td>${order.res_partner && order.res_partner.name ? order.res_partner.name : ''}</td>
               <td>${isNCF(order.ncf) ? order.ncf : ''}</td>
             `;

@@ -1,6 +1,13 @@
 import POSOrder from '../models/pos_order';
 import ResPartner from '../models/res_partner';
 import accountInvoice from '../models/account_invoice';
+import accountInvoicePaymentRel from '../models/account_invoice_payment_rel';
+import accountPayment from '../models/account_payment';
+import { Op } from 'sequelize';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+
+dayjs.extend(isBetween);
 class OrdersService {
 
   static async getAll(params) {
@@ -36,7 +43,9 @@ class OrdersService {
         delete invoiceCriterions.where.date_order;
         const { rows, count } = await accountInvoice.findAndCountAll({
           ...invoiceCriterions,
-          include: [{ model: ResPartner }]
+          include: [
+            { model: ResPartner }
+          ]
         });
         let accountInvoices = JSON.parse(JSON.stringify(rows));
         accountInvoices = accountInvoices.map(o => ({
@@ -45,6 +54,32 @@ class OrdersService {
           date_order: o.create_date,
           ncf: o.reference
         }));
+
+        for (let invoice of accountInvoices) {
+
+          if (invoice.payment_term_id !== null) {
+
+            const payments = await accountInvoicePaymentRel.findAll({
+              where: {
+                invoice_id: invoice.id
+              },
+              include: [
+                {
+                  model: accountPayment,
+                }
+              ]
+            });
+
+            const startDate = criterions.where.date_order[Op.between][0];
+            const endDate = criterions.where.date_order[Op.between][1];
+
+            const paymentsFiltered = payments.filter(payment => {
+              return dayjs(payment.account_payment.create_date).isBetween(startDate, endDate);
+            }
+            );
+            invoice.payments = paymentsFiltered;
+          }
+        }
 
         results = [...results, ...accountInvoices];
         generalCount += count;

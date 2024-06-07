@@ -1,6 +1,7 @@
 import { sequelize } from '../database/database';
 import { DataTypes } from 'sequelize';
 import ResPartner from './res_partner';
+import accountInvoicePaymentRel from './account_invoice_payment_rel';
 
 const accountInvoice = sequelize.define('account_invoice', {
   id: {
@@ -437,6 +438,11 @@ const accountInvoice = sequelize.define('account_invoice', {
 accountInvoice.hasOne(ResPartner, {
   sourceKey: 'partner_id',
   foreignKey: 'id'
+});
+
+accountInvoice.hasMany(accountInvoicePaymentRel, {
+  sourceKey: 'id',
+  foreignKey: 'invoice_id'
 });
 
 export default accountInvoice;
