@@ -102,7 +102,8 @@
           <tbody class="order-table-body"></tbody>
         </table>
         <div>
-          <h5>Total: <span id="total-amount">$0.00</span></h5>
+          <h5>Total Efectivo: <span id="total-amount">$0.00</span></h5>
+          <h5>Total a Credito: <span id="total-credit-amount">$0.00</span></h5>
         </div>
       </div>
     </main>
@@ -271,6 +272,7 @@
             const orderTableBody = document.querySelector('.order-table-body');
             orderTableBody.innerHTML = '';
             let total = 0;
+            let totalCredit = 0;
 
             if (data.data.length === 0) {
               document.querySelector('#no-data').style.display = 'block';
@@ -323,17 +325,24 @@
               }">${order.pos_reference ? order.pos_reference.replace('Pedido ', '') : ''}${isDuplicate && !isRoot ? ' ' + refreshImg : ''}</td>
               <td>${formatDate(order.date_order)}</td>
               <td>${isNaN(order.payment_term_id) ? formatter.format(Number(order.amount_total)) : 0}</td>
-              <td>${!isNaN(order.payment_term_id) ? formatter.format(Number(getAmountFromPaymentTerm(order))) : 0}</td>
+              <td>${!isNaN(order.payment_term_id) ? formatter.format(Number(order.amount_total)) : 0}</td>
               <td>${order.res_partner && order.res_partner.name ? order.res_partner.name : ''}</td>
               <td>${isNCF(order.ncf) ? order.ncf : ''}</td>
             `;
 
-              total += Number(order.amount_total);
+              if(isNaN(order.payment_term_id)){
+                total += Number(order.amount_total);
+              } else {
+                totalCredit += Number(order.amount_total);
+              }
+              
               orderTableBody.appendChild(orderRow);
             });
 
             document.querySelector('#total-amount').textContent =
               formatter.format(total);
+            document.querySelector('#total-credit-amount').textContent =
+              formatter.format(totalCredit);
           })
           .catch((error) => {
             console.log(error)
