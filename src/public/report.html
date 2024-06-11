@@ -317,6 +317,10 @@
               if (isDuplicate){
                 isRoot = duplicates[duplicateIndex][0].id === order.id;
               }
+              
+              if(order.pos_reference.includes('B01') || order.pos_reference.includes('B02')){
+                isDuplicate = false;
+              }
 
               const orderRow = document.createElement('tr');
               orderRow.innerHTML = `
