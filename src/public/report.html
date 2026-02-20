@@ -318,7 +318,7 @@
                 isRoot = duplicates[duplicateIndex][0].id === order.id;
               }
               
-              if(order.pos_reference.includes('B01') || order.pos_reference.includes('B02')){
+              if(order?.pos_reference?.includes('B01') || order?.pos_reference?.includes('B02')){
                 isDuplicate = false;
               }
 
