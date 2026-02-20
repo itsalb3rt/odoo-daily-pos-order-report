@@ -303,7 +303,7 @@
             };
 
             const getReferenceNumber = (order) => {
-              if(order.pos_reference){
+              if(order.pos_reference && !order.ncf){
                 return order.pos_reference.replace('Pedido ', '');
               } else if(order.number && order.move_name){
                 return order.number;
