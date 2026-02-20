@@ -302,6 +302,16 @@
               return total;
             };
 
+            const getReferenceNumber = (order) => {
+              if(order.pos_reference){
+                return order.pos_reference.replace('Pedido ', '');
+              } else if(order.number && order.move_name){
+                return order.number;
+              } else {
+                return '';
+              }
+            }
+
             data.data.forEach((order) => {
               // check if order in duplicated by pos_reference
               let isDuplicate = false;
@@ -326,7 +336,7 @@
               orderRow.innerHTML = `
               <td class="${
                 isDuplicate && !isRoot ? 'duplicate' : ''
-              }">${order.pos_reference ? order.pos_reference.replace('Pedido ', '') : ''}${isDuplicate && !isRoot ? ' ' + refreshImg : ''}</td>
+              }">${getReferenceNumber(order)}${isDuplicate && !isRoot ? ' ' + refreshImg : ''}</td>
               <td>${formatDate(order.date_order)}</td>
               <td>${isNaN(order.payment_term_id) ? formatter.format(Number(order.amount_total)) : 0}</td>
               <td>${!isNaN(order.payment_term_id) ? formatter.format(Number(order.amount_total)) : 0}</td>
